@@ -1,10 +1,6 @@
 module Main where
 
 import Utils
-import Graphics.Gloss
-import Graphics.Gloss.Juicy
-import Graphics.Gloss.Interface.Pure.Game
-import Graphics.Gloss.Interface.Environment
 
 -- | Settings
 

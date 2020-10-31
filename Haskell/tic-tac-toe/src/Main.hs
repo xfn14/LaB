@@ -31,3 +31,12 @@ window = InWindow "Tic-Tac-Toe" (width,height) (0,0) -- Display in a window with
 -- | Background Color
 bckgColor :: Color
 bckgColor = makeColor 255 255 255 255
+
+initGame :: Game
+initGame = 
+    Game {
+        board = initBoard boardRange $ zip (range boardRange) (repeat Nothing),
+        crtPlayer = X,
+        state = Running
+    }
+    where boardRange = ((0,0), (2,2))

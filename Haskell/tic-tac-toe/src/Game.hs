@@ -1,7 +1,6 @@
 module Game where
 
-import Render
-import Data.Array
+import Data.Array ( Ix(range), Array )
 
 data Player
     = X
@@ -19,16 +18,7 @@ type Board = Array (Int,Int) Cell
 
 data Game
     = Game {
-        board :: Board
-        crtPlayer :: Player
+        board :: Board,
+        crtPlayer :: Player,
         state :: State
     } deriving (Eq, Show)
-
-initGame :: Game
-initGame = 
-    Game {
-        board = initBoard boardRange $ zip (range boardRange) (repeat Nothing)
-        crtPlayer = X,
-        state = Running
-    }
-    where boardRange = ((0,0), (2,2))
