@@ -35,15 +35,26 @@ mkRnds :: Int -- ^ Desired length of array
 mkRnds n seed = take n (randomRs (0,99) (mkStdGen seed))
 
 -- | This function generates the Maze with a certain seed
-generateMaze :: Int -- ^ Colums of the maze
-             -> Int -- ^ Lines of the maze
-             -> Int -- ^ Seed of the maze
-             -> Maze -- ^ Generated maze
+generateMaze :: Int -- ^ Columns of the Maze
+             -> Int -- ^ Lines of the Maze
+             -> Int -- ^ Seed of the Maze
+             -> Maze -- ^ Generated Maze
 generateMaze col lin seed = 
     clearMaze
     where
         clearMaze = map generateCorridor rnds
         rnds = chunksOf (col-2) (mkRnds ((col-2)*(lin-2)) seed)
+
+addWallsBox :: Int -- ^ Columns of the Maze
+            -> Int -- ^ Lines of the Maze
+            -> Maze -- ^ Maze to add the limit Walls
+            -> Maze -- ^ Generated Maze
+addWallsBox col lin maze =
+    (limitLine col):(inside)++[limitLine col] -- Add the top and bottom Walls to the Walled Maze. Making the box.
+    where
+        inside = map reverse insideLeft -- Reverse back the Maze to its origin
+        insideLeft = map (Wall:) (map (reverse) insideRight) -- Add the Walls to the left of the Maze
+        insideRight = map (Wall:) maze -- Add the Walls on the right of the Maze
 
 -- | This function generates random a Corridor
 -- | from a list of random numbers.
