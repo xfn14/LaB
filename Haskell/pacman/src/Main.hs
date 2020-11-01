@@ -2,6 +2,8 @@ module Main where
 
 import Utils
 
+-- Just a small test
+
 -- | Settings
 
 -- | Frame Rate
