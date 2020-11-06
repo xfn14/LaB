@@ -1,5 +1,6 @@
 module Maze where
 
+import Utils
 import System.Random
 import Data.List.Split
 
@@ -40,10 +41,25 @@ generateMaze :: Int -- ^ Columns of the Maze
              -> Int -- ^ Seed of the Maze
              -> Maze -- ^ Generated Maze
 generateMaze col lin seed = 
-    clearMaze
+    clearMaze -- Final generated Maze
     where
-        clearMaze = map generateCorridor rnds
-        rnds = chunksOf (col-2) (mkRnds ((col-2)*(lin-2)) seed)
+        boxed = addWallsBox col lin clearMaze -- Maze with the outside walls
+        clearMaze = map generateCorridor rnds -- The inside of the Maze
+        rnds = chunksOf (col-2) (mkRnds ((col-2)*(lin-2)) seed) -- List of random numbers generated from a seed
+
+-- | Add side Exits to teleport to other side of the Maze
+addExits :: Int -- ^ Columns of the Maze
+         -> Int -- ^ Lines of the Maze
+         -> Maze -- ^ Maze to add the exits (Must have WallBox)
+         -> Maze -- ^ Maze with the Exits
+addExits col lin maze =
+    if lin % 2 == 0 then step4
+    else step2
+    where
+        step1 = setIndexList (floor (lin/2)) maze (setIndexList 0 (getIndexList (floor (lin/2)) maze) (Empty))
+        step2 = setIndexList (floor (lin/2)) step1 (setIndexList (col-1) (getIndexList (floor (lin/2)) maze) (Empty))
+        step3 = setIndexList (floor (lin/2)-1) step2 (setIndexList (0) (getIndexList (floor (lin/2)-1) maze) (Empty))
+        step4 = setIndexList (floor (lin/2)-1) step2 (setIndexList (col-1) (getIndexList (floor (lin/2)-1) maze) (Empty))
 
 addWallsBox :: Int -- ^ Columns of the Maze
             -> Int -- ^ Lines of the Maze
