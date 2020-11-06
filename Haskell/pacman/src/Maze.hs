@@ -53,7 +53,7 @@ addExits :: Int -- ^ Columns of the Maze
          -> Maze -- ^ Maze to add the exits (Must have WallBox)
          -> Maze -- ^ Maze with the Exits
 addExits col lin maze =
-    if lin % 2 == 0 then step4
+    if mod lin 2 == 0 then step4
     else step2
     where
         step1 = setIndexList (floor (lin/2)) maze (setIndexList 0 (getIndexList (floor (lin/2)) maze) (Empty))
