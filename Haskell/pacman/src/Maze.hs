@@ -41,7 +41,7 @@ generateMaze :: Int -- ^ Columns of the Maze
              -> Int -- ^ Seed of the Maze
              -> Maze -- ^ Generated Maze
 generateMaze col lin seed = 
-    addExits col lin clearMaze -- Final generated Maze
+    addExits col lin boxed -- Final generated Maze
     where
         boxed = addWallsBox col lin clearMaze -- Maze with the outside walls
         clearMaze = map generateCorridor rnds -- The inside of the Maze
