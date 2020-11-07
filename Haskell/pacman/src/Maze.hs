@@ -1,6 +1,6 @@
 module Maze where
 
-import Utils
+import Utils ( getIndexList, setIndexList )
 import System.Random
 import Data.List.Split
 
@@ -40,12 +40,38 @@ generateMaze :: Int -- ^ Columns of the Maze
              -> Int -- ^ Lines of the Maze
              -> Int -- ^ Seed of the Maze
              -> Maze -- ^ Generated Maze
-generateMaze col lin seed = 
-    addExits col lin boxed -- Final generated Maze
+generateMaze col lin seed =
+    if col < 15 || lin < 10 then error "Maze needs to be at least 15x10" -- Invalid Maze size
+    else midTunel -- Final generated Maze
     where
+        midTunel = addExits col lin boxed -- Maze with the tunel on the sides
         boxed = addWallsBox col lin clearMaze -- Maze with the outside walls
         clearMaze = map generateCorridor rnds -- The inside of the Maze
         rnds = chunksOf (col-2) (mkRnds ((col-2)*(lin-2)) seed) -- List of random numbers generated from a seed
+
+-- | Add the Ghost House to the Maze
+addGhostHouse :: Int -- ^ Columns of the Maze
+              -> Int -- ^ Lines of the Maze
+              -> Maze -- ^ Maze to add the ghost house
+              -> Maze -- ^ Maze with the Ghost House
+addGhostHouse col lin maze =
+    if mod col 2 == 0 then ghostHouseEven col lin maze
+    else ghostHouseOdd col lin maze
+
+
+-- TODO
+-- | Add the Ghost House to Odd Maze
+ghostHouseOdd :: Int -- ^ Columns of the Maze
+              -> Int -- ^ Lines of the Maze
+              -> Maze -- ^ Maze the add the ghost house
+              -> Maze -- ^ Resulting Maze with the Odd Ghost House
+ghostHouseOdd col lin maze =
+    where
+        midPoint =
+            if mod lin 2 == 0 then tempMidPoint - 1
+            else tempMidPoint
+        tempMidPoint = fromIntegral (floor (fromIntegral (lin/2)))
+        step1 = getIndexList (midPoint-2) (maze)
 
 -- | Add side Exits to teleport to other side of the Maze
 addExits :: Int -- ^ Columns of the Maze

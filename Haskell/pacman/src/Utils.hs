@@ -15,7 +15,7 @@ setIndexList :: Int -- ^ Index of the element.
              -> [a] -- ^ List with the elements.
              -> a -- ^ Element to place.
              -> [a] -- ^ Returned list.
-setIndexList x l@(h:t) elem =
+setIndexList x (h:t) elem =
     if (x <= length t) || (x < 0) then -- Index negative or bigger than list
         if x == 0 then elem:t -- Change the elem
         else h:(setIndexList (x-1) t elem) -- Recurisve until the index
