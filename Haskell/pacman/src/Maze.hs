@@ -57,9 +57,9 @@ addExits col lin maze =
     else step2
     where
         step1 = setIndexList (fromIntegral $ floor (fromIntegral lin/2)) maze (setIndexList 0 (getIndexList (fromIntegral $ floor (fromIntegral lin/2)) maze) (Empty))
-        step2 = setIndexList (fromIntegral $ floor (fromIntegral lin/2)) step1 (setIndexList (col-1) (getIndexList (fromIntegral $ floor (fromIntegral lin/2)) maze) (Empty))
-        step3 = setIndexList (fromIntegral $ floor (fromIntegral lin/2)-1) step2 (setIndexList (0) (getIndexList (fromIntegral $ floor (fromIntegral lin/2)-1) maze) (Empty))
-        step4 = setIndexList (fromIntegral $ floor (fromIntegral lin/2)-1) step2 (setIndexList (col-1) (getIndexList (fromIntegral $ floor (fromIntegral lin/2)-1) maze) (Empty))
+        step2 = setIndexList (fromIntegral $ floor (fromIntegral lin/2)) step1 (setIndexList (col-1) (getIndexList (fromIntegral $ floor (fromIntegral lin/2)) step1) (Empty))
+        step3 = setIndexList (fromIntegral $ floor (fromIntegral lin/2)-1) step2 (setIndexList (0) (getIndexList (fromIntegral $ floor (fromIntegral lin/2)-1) step2) (Empty))
+        step4 = setIndexList (fromIntegral $ floor (fromIntegral lin/2)-1) step3 (setIndexList (col-1) (getIndexList (fromIntegral $ floor (fromIntegral lin/2)-1) step3) (Empty))
 
 addWallsBox :: Int -- ^ Columns of the Maze
             -> Int -- ^ Lines of the Maze
