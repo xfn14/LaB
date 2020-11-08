@@ -1,8 +1,8 @@
 module Maze where
 
 import Utils ( getIndexList, setIndexList )
-import System.Random
-import Data.List.Split
+import System.Random ( mkStdGen, Random(randomRs) )
+import Data.List.Split ( chunksOf )
 
 -- Maze = [[Piece]]
 type Maze = [Corridor]
@@ -49,29 +49,29 @@ generateMaze col lin seed =
         clearMaze = map generateCorridor rnds -- The inside of the Maze
         rnds = chunksOf (col-2) (mkRnds ((col-2)*(lin-2)) seed) -- List of random numbers generated from a seed
 
+-- TODO
 -- | Add the Ghost House to the Maze
 addGhostHouse :: Int -- ^ Columns of the Maze
               -> Int -- ^ Lines of the Maze
               -> Maze -- ^ Maze to add the ghost house
               -> Maze -- ^ Maze with the Ghost House
-addGhostHouse col lin maze =
-    if mod col 2 == 0 then ghostHouseEven col lin maze
-    else ghostHouseOdd col lin maze
+addGhostHouse col lin maze = undefined -- temp
+    --if mod col 2 == 0 then ghostHouseEven col lin maze
+    --else ghostHouseOdd col lin maze
 
-
--- TODO
--- | Add the Ghost House to Odd Maze
-ghostHouseOdd :: Int -- ^ Columns of the Maze
-              -> Int -- ^ Lines of the Maze
-              -> Maze -- ^ Maze the add the ghost house
-              -> Maze -- ^ Resulting Maze with the Odd Ghost House
-ghostHouseOdd col lin maze =
+-- | Add the Ghost House to Even Maze
+ghostHouseEven :: Int -- ^ Columns of the Maze
+               -> Int -- ^ Lines of the Maze
+               -> Maze -- ^ Maze the add the ghost house
+               -> Maze -- ^ Resulting Maze with the Even Ghost House
+ghostHouseEven col lin maze =
+    setIndexList (midPoint-2) maze topBotLine
     where
         midPoint =
-            if mod lin 2 == 0 then tempMidPoint - 1
-            else tempMidPoint
-        tempMidPoint = fromIntegral (floor (fromIntegral (lin/2)))
-        step1 = getIndexList (midPoint-2) (maze)
+            if mod lin 2 == 0 then (div lin 2) - 1
+            else (div lin 2)
+        line1 = getIndexList (midPoint-2) (maze)
+        topBotLine = (take ((div col 2)-5) line1) ++ [Empty,Empty,Empty,Empty,Empty,Empty,Empty,Empty,Empty,Empty] ++ (drop ((div col 2)-5) line1)
 
 -- | Add side Exits to teleport to other side of the Maze
 addExits :: Int -- ^ Columns of the Maze
@@ -82,10 +82,11 @@ addExits col lin maze =
     if mod lin 2 == 0 then step4
     else step2
     where
-        step1 = setIndexList (fromIntegral $ floor (fromIntegral lin/2)) maze (setIndexList 0 (getIndexList (fromIntegral $ floor (fromIntegral lin/2)) maze) (Empty))
-        step2 = setIndexList (fromIntegral $ floor (fromIntegral lin/2)) step1 (setIndexList (col-1) (getIndexList (fromIntegral $ floor (fromIntegral lin/2)) step1) (Empty))
-        step3 = setIndexList (fromIntegral $ floor (fromIntegral lin/2)-1) step2 (setIndexList (0) (getIndexList (fromIntegral $ floor (fromIntegral lin/2)-1) step2) (Empty))
-        step4 = setIndexList (fromIntegral $ floor (fromIntegral lin/2)-1) step3 (setIndexList (col-1) (getIndexList (fromIntegral $ floor (fromIntegral lin/2)-1) step3) (Empty))
+        -- (old) fromIntegral $ floor (fromIntegral lin/2)
+        step1 = setIndexList (div lin 2) maze (setIndexList 0 (getIndexList (div lin 2) maze) (Empty))
+        step2 = setIndexList (div lin 2) step1 (setIndexList (col-1) (getIndexList (div lin 2) step1) (Empty))
+        step3 = setIndexList ((div lin 2)-1) step2 (setIndexList (0) (getIndexList ((div lin 2)-1) step2) (Empty))
+        step4 = setIndexList ((div lin 2)-1) step3 (setIndexList (col-1) (getIndexList ((div lin 2)-1) step3) (Empty))
 
 addWallsBox :: Int -- ^ Columns of the Maze
             -> Int -- ^ Lines of the Maze
