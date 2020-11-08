@@ -23,6 +23,10 @@ data FoodType
     = Big 
     | Little
 
+-- | Size of each piece in display
+pieceSize :: Int
+pieceSize = 40 -- value in px
+
 -- | Just the bottom and top rows of the Maze
 limitLine :: Int 
           -> [Piece]
