@@ -1,7 +1,15 @@
 module Render where
 
 import Maze
+    ( FoodType(Big, Little), Piece(..), Corridor, Maze, pieceSize )
 import Graphics.Gloss
+    ( green,
+      greyN,
+      circleSolid,
+      color,
+      rectangleSolid,
+      translate,
+      Picture(Blank) )
 
 -- | Convert a Maze to a Gloss Picture
 drawMaze :: Maze -- ^ Maze to draw
@@ -24,11 +32,11 @@ drawPiece :: Piece -- ^ Piece to draw
           -> Int -- ^ Column number
           -> Picture -- ^ Generated Piece Picture
 drawPiece p lin col =
-    translate (realToFrac (col*pieceSize)) (realToFrac (lin*pieceSize))
+    translate (realToFrac (col*pieceSize)) (-(realToFrac (lin*pieceSize)))
         (
             case p of
                 Empty -> Blank
                 Wall -> color green (rectangleSolid (realToFrac pieceSize) (realToFrac pieceSize)) -- rectangleSolid is using center of rect
                 Food Little -> color (greyN 0.5) (circleSolid (realToFrac $ div pieceSize 2 - (div pieceSize 3)))
-                Food Big -> color (greyN 0.5) (circleSolid (realToFrac $ div pieceSize 2 - 5))
+                Food Big -> color (greyN 0.5) (circleSolid (realToFrac $ div pieceSize 2))
         )
