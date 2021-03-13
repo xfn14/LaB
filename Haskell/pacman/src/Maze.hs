@@ -5,6 +5,29 @@ import Utils ( getIndexList, setIndexList )
 import System.Random ( mkStdGen, Random(randomRs) )
 import Data.List.Split ( chunksOf )
 
+-- Maze = [[Piece]]
+type Maze = [Corridor]
+type Corridor = [Piece]
+
+data Piece 
+    = Food FoodType 
+    | Wall 
+    | Empty
+
+instance Show Piece where
+    show (Food Big) = "o"
+    show (Food Little) = "."
+    show (Wall) = "#"
+    show (Empty) = " "
+
+data FoodType 
+    = Big 
+    | Little
+
+-- | Size of each piece in display
+pieceSize :: Int
+pieceSize = 40 -- value in px
+
 -- | Just the bottom and top rows of the Maze
 limitLine :: Int 
           -> [Piece]
@@ -24,7 +47,7 @@ generateMaze :: Int -- ^ Columns of the Maze
              -> Maze -- ^ Generated Maze
 generateMaze col lin seed =
     if col < 15 || lin < 10 then error "Maze needs to be at least 15x10" -- Invalid Maze size
-    else midTunel -- Final generated Maze
+    else ghostHouseEven col lin midTunel -- Final generated Maze
     where
         midTunel = addExits col lin boxed -- Maze with the tunel on the sides
         boxed = addWallsBox col lin clearMaze -- Maze with the outside walls
@@ -47,13 +70,15 @@ ghostHouseEven :: Int -- ^ Columns of the Maze
                -> Maze -- ^ Maze the add the ghost house
                -> Maze -- ^ Resulting Maze with the Even Ghost House
 ghostHouseEven col lin maze =
-    setIndexList (midPoint-2) maze topBotLine
+    setIndexList (midPoint+1) (setIndexList midPoint (setIndexList (midPoint-1) (setIndexList (midPoint+2) (setIndexList (midPoint-2) maze topBotLine) topBotLine) house1) house2) house3
     where
         midPoint =
             if mod lin 2 == 0 then (div lin 2) - 1
             else (div lin 2)
-        line1 = getIndexList (midPoint-2) (maze)
-        topBotLine = (take ((div col 2)-5) line1) ++ [Empty,Empty,Empty,Empty,Empty,Empty,Empty,Empty,Empty,Empty] ++ (drop ((div col 2)-5) line1)
+        topBotLine = (take ((div col 2)-5) (getIndexList (midPoint-2) (maze))) ++ [Empty,Empty,Empty,Empty,Empty,Empty,Empty,Empty,Empty,Empty] ++ (drop ((div col 2)+5) (getIndexList (midPoint-2) (maze)))
+        house1 = (take ((div col 2)-5) (getIndexList (midPoint-1) (maze))) ++ [Empty,Wall,Wall,Wall,Empty,Empty,Wall,Wall,Wall,Empty] ++ (drop ((div col 2)+5) (getIndexList (midPoint-1) (maze)))
+        house2 = (take ((div col 2)-5) (getIndexList (midPoint) (maze))) ++ [Empty,Wall,Empty,Empty,Empty,Empty,Empty,Empty,Wall,Empty] ++ (drop ((div col 2)+5) (getIndexList (midPoint) (maze)))
+        house3 = (take ((div col 2)-5) (getIndexList (midPoint+1) (maze))) ++ [Empty,Wall,Wall,Wall,Wall,Wall,Wall,Wall,Wall,Empty] ++ (drop ((div col 2)+5) (getIndexList (midPoint+1) (maze)))
 
 -- | Add side Exits to teleport to other side of the Maze
 addExits :: Int -- ^ Columns of the Maze

@@ -1,10 +1,11 @@
 module Main where
 
 import Maze ( generateMaze )
-import System.Random ( randomRIO )
+import Render ( drawMaze )
 import Graphics.Gloss
+    ( black, display, Display(InWindow), Color, Picture(Pictures) )
 
--- | Settings
+-- Settings
 
 -- | Frame Rate
 fr :: Int
@@ -25,10 +26,6 @@ window =
 main :: IO()
 main =
     --seed <- randomRIO (0,9999)
-    display window background cirlcee
+    display window background (Pictures (drawMaze maze 0))
     where
         maze = generateMaze 20 20 111
-
-cirlcee :: Picture
-cirlcee = circle 80
-

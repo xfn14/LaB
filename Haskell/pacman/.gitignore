@@ -1,5 +1,8 @@
 .idea/
 out/
+
+Main
+
 ### NetBeans template
 **/nbproject/private/
 **/nbproject/Makefile-*.mk
