@@ -1,27 +1,9 @@
 module Maze where
 
+import Types
 import Utils ( getIndexList, setIndexList )
 import System.Random ( mkStdGen, Random(randomRs) )
 import Data.List.Split ( chunksOf )
-
--- Maze = [[Piece]]
-type Maze = [Corridor]
-type Corridor = [Piece]
-
-data Piece 
-    = Food FoodType 
-    | Wall 
-    | Empty
-
-instance Show Piece where
-    show (Food Big) = "o"
-    show (Food Little) = "."
-    show (Wall) = "#"
-    show (Empty) = " "
-
-data FoodType 
-    = Big 
-    | Little
 
 -- | Just the bottom and top rows of the Maze
 limitLine :: Int 
